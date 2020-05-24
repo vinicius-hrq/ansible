@@ -1,0 +1,8 @@
+---
+# vars file for create
+instance_type: t2.micro
+security_group: Walrus
+image: ami-05801d0a3c8e4c443
+keypair: tyr
+region: us-east-1
+count: 1
