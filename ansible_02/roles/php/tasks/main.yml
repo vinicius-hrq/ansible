@@ -1,0 +1,26 @@
+--- 
+- 
+  apt: 
+    name: "{{ packages }}"
+  become: true
+  become_method: sudo
+  name: "Instalando PHP e extensoes"
+  vars: 
+    packages: 
+      - php-fpm
+      - php-mysql
+      - php-gd
+      - php-intl
+      - php-mbstring
+      - php-soap
+      - php-xml
+      - php-xmlrpc
+      - php-zip
+- 
+  become: true
+  become_method: sudo
+  lineinfile: "dest=/etc/php/7.2/fpm/php.ini regexp='^(.*)cgi.fix_pathinfo=' line=cgi.fix_pathinfo=0"
+  name: "Alterando php.ini"
+  notify: 
+    - "restart php-fpm"
+    - "restart nginx"

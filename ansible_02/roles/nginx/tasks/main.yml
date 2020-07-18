@@ -1,0 +1,30 @@
+--- 
+- 
+  apt: "name=nginx state=present update_cache=yes"
+  become: yes
+  become_method: sudo
+  name: "Instalando Nginx"
+- 
+  name: "Copiando Vhost do Nginx"
+  become: true
+  become_method: sudo
+  template: 
+    dest: /etc/nginx/sites-available/default.conf
+    src: nginx.j2
+  notify: "restart nginx"
+- 
+  become: true
+  become_method: sudo
+  file: 
+    path: /etc/nginx/sites-available/default
+    state: absent
+  name: "Removendo vhost do nginx"
+- 
+  become: true
+  become_method: sudo
+  file: 
+    dest: /etc/nginx/sites-enabled/default
+    src: /etc/nginx/sites-available/default.conf
+    state: link
+  name: "Criando link simbolico vhost"
+  notify: "restart nginx"

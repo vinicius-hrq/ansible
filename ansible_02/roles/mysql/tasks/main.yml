@@ -1,0 +1,28 @@
+---
+# tasks file for mysql
+- 
+  apt: 
+    name: "{{ packages }}"
+  become: true
+  become_method: sudo
+  name: "Instalacao de dependencias"
+  vars: 
+    packages: 
+      - python-mysqldb
+- 
+  apt: 
+    name: mysql-server
+    state: present
+  become: true
+  become_method: sudo
+  name: "Instalando MySQL"
+- 
+  mysql_db: "name={{ mysql_db }} state=present"
+  name: "Criando database"
+  become: true
+  become_method: sudo
+- 
+  mysql_user: "name={{ mysql_user }} password={{ mysql_password }} priv='*.*:ALL,GRANT' state=present"
+  become: true
+  become_method: sudo
+  name: "Criando usuario"

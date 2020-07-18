@@ -1,0 +1,7 @@
+---
+# handlers file for nginx
+- 
+  become: true
+  become_method: sudo
+  name: "restart nginx"
+  service: "name=nginx state=restarted"

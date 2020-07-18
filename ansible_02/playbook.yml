@@ -1,0 +1,7 @@
+--- 
+- 
+  hosts: Webserver
+  roles: 
+    - nginx
+    - php
+    - mysql
