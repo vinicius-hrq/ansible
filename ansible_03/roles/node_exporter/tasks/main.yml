@@ -1,0 +1,9 @@
+---
+# tasks file for node_exporter
+- name: Criando usuario node_exporter
+  become: yes
+  become_method: sudo  
+  user:
+    name: node_exporter
+    create_home: no
+    shell: /bin/false
