@@ -8,7 +8,7 @@
   name: "Instalacao de dependencias"
   vars: 
     packages: 
-      - python-mysqldb
+      - python3-pymysql
 - 
   apt: 
     name: mysql-server
