@@ -1,0 +1,9 @@
+---
+# tasks file for monitoring
+- 
+  failed_when: "'threads' not in status.content"
+  name: "Check that you can connect (GET) to a page and it returns a status 200"
+  register: status
+  uri: 
+    return_content: true
+    url: "your_URL"

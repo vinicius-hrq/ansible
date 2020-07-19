@@ -1,0 +1,82 @@
+--- 
+- 
+  git: 
+    dest: /home/ubuntu/laravel
+    repo: "https://github.com/schoolofnetcom/forum-realtime-com-laravel.git"
+  name: "Clonando repostiroio"
+- 
+  become: true
+  become_method: sudo
+  copy: 
+    dest: /var/www/html
+    force: true
+    group: www-data
+    owner: www-data
+    remote_src: true
+    src: /home/ubuntu/laravel/
+  name: "Copiando arquivos para diretorio www"
+  notify: "restart nginx"
+- 
+  args: 
+    creates: usr/local/bin/composer
+  become: true
+  become_method: sudo
+  name: "Instalacao do composer"
+  shell: "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
+- 
+  name: "Conferindo .env.example"
+  register: env_stat
+  stat: path=/var/www/html/.env.example
+- 
+  become: true
+  become_method: sudo
+  command: "mv /var/www/html/.env.example /var/www/html/.env"
+  name: "Renomear .env"
+  when: env_stat.stat.exists
+- 
+  become: true
+  become_method: sudo
+  lineinfile: "dest=/var/www/html/.env regexp='^DB_DATABASE=' line=DB_DATABASE=mydb"
+  name: "set DB_DATABASE"
+- 
+  become: true
+  become_method: sudo
+  lineinfile: "dest=/var/www/html/.env regexp='^DB_USERNAME=' line=DB_USERNAME=vhs_user"
+  name: "set DB_USERNAME"
+- 
+  become: true
+  become_method: sudo
+  lineinfile: "dest=/var/www/html/.env regexp='^DB_PASSWORD=' line=DB_PASSWORD={{ db_password }}"
+  name: "set DB_PASSWORD"
+- 
+  name: "Verificando .env"
+  register: env_dev_stat
+  stat: path=/var/www/html/.env
+- 
+  args: 
+    chdir: /var/www/html
+  become: true
+  become_method: sudo
+  name: "Run composer"
+  shell: "composer install"
+  when: env_dev_stat.stat.exists
+
+- 
+  become: true
+  become_method: sudo
+  name: "Run artisan key generate"
+  shell: "php /var/www/html/artisan key:generate"
+  when: env_dev_stat.stat.exists
+
+- 
+  name: "Check MySQL 3306"
+  wait_for: 
+    delay: 10
+    port: 3306
+
+- 
+  become: true
+  become_method: sudo
+  name: "Run artisan migrate"
+  shell: "php /var/www/html/artisan migrate --force"
+  when: env_dev_stat.stat.exists

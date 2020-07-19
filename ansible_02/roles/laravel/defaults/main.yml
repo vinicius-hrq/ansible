@@ -1,0 +1,3 @@
+---
+# defaults file for laravel
+db_password: "Your MySQL DB password"

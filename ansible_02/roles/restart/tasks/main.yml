@@ -1,0 +1,21 @@
+---
+# tasks file for restart
+- 
+  name: "Wait for port 80 of any IP to close active connections, ignoring connections for specified hosts"
+  wait_for: 
+    port: 80
+    state: drained
+- 
+  become: true
+  become_method: sudo
+  name: "Restart php-fpm"
+  service: 
+    name: php7.2-fpm
+    state: restarted
+- 
+  become: true
+  become_method: sudo
+  name: "Restart Nginx"
+  service: 
+    name: nginx
+    state: restarted

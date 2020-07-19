@@ -16,6 +16,7 @@
       - php-xml
       - php-xmlrpc
       - php-zip
+      - php-curl
 - 
   become: true
   become_method: sudo
