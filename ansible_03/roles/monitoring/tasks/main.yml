@@ -1,0 +1,10 @@
+---
+# tasks file for monitoring
+- 
+  failed_when: "'Exporter' not in status.content"
+  name: "Verificando se exporter está acessível (status 200)"
+  register: status
+  uri: 
+    return_content: true
+    url: "ip_of_your_instance:9100/"
+
