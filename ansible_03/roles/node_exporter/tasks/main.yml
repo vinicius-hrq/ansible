@@ -37,3 +37,10 @@
     group: node_exporter
     mode: '0544'
     remote_src: yes
+
+- name: Configurando exporter como serviço
+  become: true
+  become_method: sudo
+  template:
+    dest: /etc/systemd/system/
+    src: node_exporter.service
