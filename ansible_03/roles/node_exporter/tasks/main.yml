@@ -1,46 +1,56 @@
 ---
 # tasks file for node_exporter
-- name: Criando usuario node_exporter
-  become: yes
-  become_method: sudo  
-  user:
+- 
+  become: true
+  become_method: sudo
+  name: "Criando usuario node_exporter"
+  user: 
+    create_home: false
     name: node_exporter
-    create_home: no
     shell: /bin/false
-
-- name: Realizando Download do node_exporter
+- 
   become: true
   become_method: sudo
-  get_url:
+  get_url: 
     dest: /tmp/
-    owner: node_exporter
     group: node_exporter
+    owner: node_exporter
     url: "https://github.com/prometheus/node_exporter/releases/download/v1.0.1/node_exporter-1.0.1.linux-amd64.tar.gz"
-
-- name: Descompactando exporter
-  become: true
-  become_method: sudo  
-  unarchive:
-    src: /tmp/node_exporter-1.0.1.linux-amd64.tar.gz
-    dest: /tmp/
-    owner: node_exporter
-    group: node_exporter
-    remote_src: yes
-
-- name: Copiando exporter para /usr/local/bin
-  become: true
-  become_method: sudo   
-  copy:
-    src: /tmp/node_exporter-1.0.1.linux-amd64/node_exporter
-    dest: /usr/local/bin
-    owner: node_exporter
-    group: node_exporter
-    mode: '0544'
-    remote_src: yes
-
-- name: Configurando exporter como serviço
+  name: "Realizando Download do node_exporter"
+- 
   become: true
   become_method: sudo
-  template:
+  name: "Descompactando exporter"
+  unarchive: 
+    dest: /tmp/
+    group: node_exporter
+    owner: node_exporter
+    remote_src: true
+    src: /tmp/node_exporter-1.0.1.linux-amd64.tar.gz
+- 
+  become: true
+  become_method: sudo
+  copy: 
+    dest: /usr/local/bin
+    group: node_exporter
+    mode: "0544"
+    owner: node_exporter
+    remote_src: true
+    src: /tmp/node_exporter-1.0.1.linux-amd64/node_exporter
+  name: "Copiando exporter para /usr/local/bin"
+- 
+  become: true
+  become_method: sudo
+  name: "Configurando exporter como serviço"
+  template: 
     dest: /etc/systemd/system/
     src: node_exporter.service
+- 
+  become: true
+  become_method: sudo
+  name: "Habilitando e iniciando exporter como serviço"
+  systemd: 
+    daemon_reload: true
+    enabled: true
+    name: node_exporter
+    state: started
