@@ -6,4 +6,4 @@ Provisioning an ec2 instance running ubuntu.
 Ansible Playbook for LEMP Stack.
 
 ### ansible_03
-Loading...
+Ansible playbook for node exporter installation.
