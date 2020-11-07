@@ -1,0 +1,7 @@
+---
+
+- name: Start zabbix-agent
+  systemd: state=started enabled=yes daemon_reload=yes name=zabbix-agent
+
+- name: Restart zabbix-agent
+  systemd: state=restarted name=zabbix-agent

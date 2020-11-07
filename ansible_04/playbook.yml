@@ -1,0 +1,6 @@
+--- 
+- 
+  hosts: Cibertron
+  name: "Starting Install"
+  roles: 
+    - zabbix_agent
