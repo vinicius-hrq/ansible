@@ -4,4 +4,5 @@ ip_of_your_instance
 [Cibertron:vars]
 ansible_ssh_user=
 ansible_ssh_pass=
+ansible_sudo_pass=
 ansible_become=true

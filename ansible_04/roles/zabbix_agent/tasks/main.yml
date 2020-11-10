@@ -23,7 +23,7 @@
     state: present
   when: "ansible_distribution == \"CentOS\" and ansible_distribution_major_version == \"8\""
 
-- name: "Installation Zabbix Agent "
+- name: "CentOS | Installation Zabbix Agent"
   yum: 
     name: zabbix-agent
     state: present
@@ -31,6 +31,26 @@
   notify:
     - Start zabbix-agent
 
+- name: "Download zabbix.deb for Debian 10"
+  apt: 
+    deb: http://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-2%2Bbuster_all.deb
+  when: "ansible_distribution == \"Debian\" and ansible_distribution_major_version == \"10\""
+  notify:
+    - Start zabbix-agent
+  
+- name: "Download zabbix.deb for Debian 9"
+  apt: 
+    deb: http://repo.zabbix.com/zabbix/4.0/debian/pool/main/z/zabbix-release/zabbix-release_4.0-1%2Bstretch_all.deb
+  when: "ansible_distribution == \"Debian\" and ansible_distribution_major_version == \"9\""
+  notify:
+    - Start zabbix-agent
+
+- name: "Debian | Install Zabbix-agent"
+  apt:
+    name: zabbix-agent
+    state: present
+  when: "ansible_distribution == \"Debian\""    
+    
 - name: "Configuring Server in zabbix_agentd.conf"
   lineinfile: dest=/etc/zabbix/zabbix_agentd.conf regexp="^Server=127.0.0.1" line="Server=192.168.0.2" state=present
   notify: Restart zabbix-agent
@@ -40,7 +60,7 @@
   notify: Restart zabbix-agent
 
 - name: "Configuring StartAgents in zabbix_agentd.conf"
-  lineinfile: dest=/etc/zabbix/zabbix_agentd.conf regexp="^# StartAgents=3" line="# StartAgents=5" state=present
+  lineinfile: dest=/etc/zabbix/zabbix_agentd.conf regexp="^# StartAgents=3" line="StartAgents=5" state=present
   notify: Restart zabbix-agent
   
   
